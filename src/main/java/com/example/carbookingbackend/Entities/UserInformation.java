@@ -1,25 +1,32 @@
 package com.example.carbookingbackend.Entities;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Generated;
-import org.springframework.data.annotation.Id;
 
-@Data
+
+
+import java.util.List;
 @Entity
+@Data
 public class UserInformation {
+
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String fullname;
+
+    private String fullName;
     private Integer phoneNumber;
-    private String Email;
-    private String Password;
-    private Address address;
-    private Car car;
+    private String email;
+    private String password;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses;
 
+    @OneToMany(mappedBy = "user")
+    private List<Car> cars;
 }
+
+
+

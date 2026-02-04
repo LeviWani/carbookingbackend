@@ -30,13 +30,13 @@ public class CarImplementation implements CarInterface {
         Car existingCar = carRepo.findById(carId)
                 .orElseThrow(() -> new RuntimeException("Car not found with id: " + carId));
 
-        existingCar.setCar_brand(carDto.getCar_brand());
-        existingCar.setCar_model(carDto.getCar_model());
-        existingCar.setCar_year(carDto.getCar_year());
-        existingCar.setCar_color(carDto.getCar_color());
-        existingCar.setCar_registrationNumber(carDto.getCar_registrationNumber());
-        existingCar.setCar_fuelType(carDto.getCar_fuelType());
-        existingCar.setCar_transmission(carDto.getCar_transmission());
+        existingCar.setCarBrand(carDto.getCarBrand());
+        existingCar.setCarModel(carDto.getCarModel());
+        existingCar.setCarYear(carDto.getCarYear());
+        existingCar.setCarColor(carDto.getCarColor());
+        existingCar.setCarRegistrationNumber(carDto.getCarRegistrationNumber());
+        existingCar.setCarFuelType(carDto.getCarFuelType());
+        existingCar.setCarTransmission(carDto.getCarTransmission());
 
         Car updatedCar = carRepo.save(existingCar);
 

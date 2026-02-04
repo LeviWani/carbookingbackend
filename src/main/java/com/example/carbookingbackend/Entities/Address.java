@@ -1,9 +1,22 @@
 package com.example.carbookingbackend.Entities;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Data
 public class Address {
-    private  String country;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long addressId;
+
+    private String country;
     private String city;
-    private String Area; //can be streetname as well
+    private String area; // street name
     private String houseNumber;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserInformation user;
 }

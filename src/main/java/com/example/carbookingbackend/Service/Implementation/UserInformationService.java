@@ -1,5 +1,6 @@
 package com.example.carbookingbackend.Service.Implementation;
 
+import com.example.carbookingbackend.Dto.CreateUserDto;
 import com.example.carbookingbackend.Dto.UserInformationDto;
 import com.example.carbookingbackend.Entities.UserInformation;
 import com.example.carbookingbackend.Mapper.UserMapper;
@@ -16,12 +17,19 @@ public class UserInformationService  implements UserInformationInterface {
     @Autowired
     private UserMapper userMapper;
 
-    @Override
-    public String createUser(UserInformationDto user) {
-        UserInformation temp = userMapper.toEntity(user);
-        userRepo.save(temp);
-        return "user created";
+    public UserInformationDto createUser(CreateUserDto dto) {
+        UserInformation user = new UserInformation();
+        user.setFullName(dto.getFullName());
+        user.setEmail(dto.getEmail());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        user.setPassword(dto.getPassword());
+        // Save user
+        UserInformation savedUser = userRepo.save(user);
+
+        return userMapper.toDto(savedUser);
     }
+
+
 
 
     /// /update info except password. that will be done by another method
@@ -30,10 +38,10 @@ public class UserInformationService  implements UserInformationInterface {
         UserInformation temp = userRepo.findById(id).orElseThrow(
                 ()-> new RuntimeException("user not found")
         );
-        temp.setFullname(user.getFullname());
+        temp.setFullName(user.getFullName());
         temp.setPhoneNumber(user.getPhoneNumber());
         temp.setEmail(user.getEmail());
-        temp.setAddress(user.getAddress());
+        temp.setAddresses(user.getAddresses());
 
 
 

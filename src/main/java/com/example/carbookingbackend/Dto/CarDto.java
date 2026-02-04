@@ -1,18 +1,27 @@
 package com.example.carbookingbackend.Dto;
 
+import com.example.carbookingbackend.Entities.UserInformation;
 import com.example.carbookingbackend.FuelType;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 public class CarDto {
-    private Long car_id;
-    private String car_brand;
-    private String car_model;
-    private Long car_year;
-    private String car_color;
-    private String car_registrationNumber;
-    private FuelType car_fuelType;
-    private String  car_transmission; ///either aautomatic or manual
+
+    private Long carId;
+
+    private String carBrand;
+    private String carModel;
+    private Long carYear;
+    private String carColor;
+    private String carRegistrationNumber;
+
+    @Enumerated(EnumType.STRING)
+    private FuelType carFuelType;
+
+    private String carTransmission;
+
+    private UserInformation user;
 
 
 }

@@ -7,12 +7,15 @@ import com.example.carbookingbackend.Mapper.UserMapper;
 import com.example.carbookingbackend.Repository.UserRepo;
 import com.example.carbookingbackend.Service.Interface.UserInformationInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class UserInformationService  implements UserInformationInterface, UserDetailsService {
@@ -22,6 +25,7 @@ public class UserInformationService  implements UserInformationInterface, UserDe
 private PasswordEncoder passwordEncoder;
     @Autowired
     private UserMapper userMapper;
+
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
@@ -34,9 +38,13 @@ private PasswordEncoder passwordEncoder;
 
         return User.withUsername(user.getFullName())
                 .password(user.getPassword())
-
+                .authorities(List.of(
+                        new SimpleGrantedAuthority("ROLE_USER")
+                ))
                 .build();
-    }public UserInformationDto createUser(CreateUserDto dto) {
+    }
+
+public UserInformationDto createUser(CreateUserDto dto) {
         UserInformation user = new UserInformation();
         user.setFullName(dto.getFullName());
         user.setEmail(dto.getEmail());

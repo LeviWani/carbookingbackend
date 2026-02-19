@@ -1,6 +1,7 @@
 package com.example.carbookingbackend.Controller;
 
 
+import com.example.carbookingbackend.Dto.AuthResponse;
 import com.example.carbookingbackend.Dto.CreateUserDto;
 import com.example.carbookingbackend.Dto.UserInformationDto;
 import com.example.carbookingbackend.Entities.UserInformation;
@@ -16,14 +17,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 
+
 @RestController
+@CrossOrigin(origins = "*")
 public class Controller {
     @Autowired
     private final AuthenticationManager authenticationManager;
@@ -38,12 +38,27 @@ public class Controller {
         this.authenticationManager = authenticationManager;
     }
 
+    @GetMapping("/mobilelogin")
+
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.email(),
+                        request.password()
+                )
+        );
+
+        String token = jwtTokenService.generateToken(authentication.getPrincipal().toString());
+        return ResponseEntity.ok(new AuthResponse(token));
+    }
+
+
     @GetMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
 
         Authentication authenticationRequest =
                 UsernamePasswordAuthenticationToken.unauthenticated(
-                        loginRequest.username(),
+                        loginRequest.email,
                         loginRequest.password()
                 );
 
@@ -52,7 +67,7 @@ public class Controller {
         SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
 
 
-        String jwtToken = jwtTokenService.generateToken(loginRequest.username());
+        String jwtToken = jwtTokenService.generateToken(loginRequest.email);
         System.out.println("JWT Token: " + jwtToken);
 
         if(jwtToken != null) {
@@ -71,7 +86,7 @@ public class Controller {
         return ResponseEntity.ok("Login successful");
     }
 
-    public record LoginRequest(String username, String password) {}
+    public record LoginRequest(String email, String password) {}
 
 
 
